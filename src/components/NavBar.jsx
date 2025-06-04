@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import Link from "next/link";
 
 const NavBar = ({ searchQuery, setSearchQuery }) => {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen)
-  }
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
+        <Link href="/" className="navbar-logo">
           BuyEasyShop
         </Link>
 
@@ -44,17 +44,17 @@ const NavBar = ({ searchQuery, setSearchQuery }) => {
                 className="search-input"
               />
             </div>
-            <Link to="/about" className="menu-item" onClick={toggleMenu}>
+            <Link href="/about" className="menu-item" onClick={toggleMenu}>
               About
             </Link>
-            <Link to="/contact" className="menu-item" onClick={toggleMenu}>
+            <Link href="/contact" className="menu-item" onClick={toggleMenu}>
               Contact
             </Link>
           </div>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;

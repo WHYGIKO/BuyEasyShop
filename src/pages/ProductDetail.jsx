@@ -1,59 +1,68 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
-import { fetchProductById } from "../api/products"
-import Loader from "../components/Loader"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { fetchProductById } from "../api/products";
+import Loader from "../components/Loader";
+import Link from "next/link";
 
 const ProductDetail = () => {
-  const { id } = useParams()
-  const [product, setProduct] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const router = useRouter();
+  const { id } = router.query; 
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
+    if (!id) return; 
     const getProduct = async () => {
       try {
-        setLoading(true)
-        const data = await fetchProductById(id)
-        setProduct(data)
-        setLoading(false)
+        setLoading(true);
+        const data = await fetchProductById(id);
+        setProduct(data);
+        setLoading(false);
       } catch (err) {
-        setError("Failed to fetch product details")
-        setLoading(false)
+        setError("Failed to fetch product details");
+        setLoading(false);
       }
-    }
+    };
 
-    getProduct()
-  }, [id])
+    getProduct();
+  }, [id]);
 
   const nextImage = () => {
     if (product && product.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => (prevIndex === product.images.length - 1 ? 0 : prevIndex + 1))
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+      );
     }
-  }
+  };
 
   const prevImage = () => {
     if (product && product.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? product.images.length - 1 : prevIndex - 1))
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
+      );
     }
-  }
+  };
 
-  if (loading) return <Loader />
+  if (loading) return <Loader />;
 
   if (error || !product) {
     return (
       <div className="product-detail-error">
         <h2>Mahsulot topilmadi</h2>
-        <Link to="/" className="back-button">
+        <Link href="/" className="back-button">
           Back to Products
         </Link>
       </div>
-    )
+    );
   }
 
-  const discountPercentage = product.discountPercentage ? Math.round(product.discountPercentage) : 0
+  const discountPercentage = product.discountPercentage
+    ? Math.round(product.discountPercentage)
+    : 0;
 
   return (
     <div className="product-detail-page">
@@ -84,7 +93,9 @@ const ProductDetail = () => {
                   key={index}
                   src={image || "/placeholder.svg"}
                   alt={`${product.title} - view ${index + 1}`}
-                  className={`thumbnail ${currentImageIndex === index ? "active" : ""}`}
+                  className={`thumbnail ${
+                    currentImageIndex === index ? "active" : ""
+                  }`}
                   onClick={() => setCurrentImageIndex(index)}
                 />
               ))}
@@ -98,7 +109,9 @@ const ProductDetail = () => {
           <div className="product-meta">
             <div className="product-price-container">
               <span className="product-price">${product.price}</span>
-              {discountPercentage > 0 && <span className="product-discount">-{discountPercentage}%</span>}
+              {discountPercentage > 0 && (
+                <span className="product-discount">-{discountPercentage}%</span>
+              )}
             </div>
 
             <div className="product-rating">
@@ -127,13 +140,13 @@ const ProductDetail = () => {
             </p>
           </div>
 
-          <Link to="/" className="back-button">
+          <Link href="/" className="back-button">
             Back to Products
           </Link>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProductDetail
+export default ProductDetail;

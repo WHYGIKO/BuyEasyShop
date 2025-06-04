@@ -1,38 +1,25 @@
-"use client"
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const pageNumbers = []
-
-  // Create array of page numbers to display
+  const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i)
+    pageNumbers.push(i);
   }
-
   return (
     <div className="pagination">
-      <button className="pagination-button" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
-        &lt;
-      </button>
-
       {pageNumbers.map((number) => (
-        <button
+        <Link
+          to={`?page=${number}`}
           key={number}
-          className={`pagination-button ${currentPage === number ? "active" : ""}`}
+          className={number === currentPage ? "active" : ""}
           onClick={() => onPageChange(number)}
         >
           {number}
-        </button>
+        </Link>
       ))}
-
-      <button
-        className="pagination-button"
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
-        &gt;
-      </button>
     </div>
-  )
-}
+  );
+};
 
-export default Pagination
+export default Pagination;

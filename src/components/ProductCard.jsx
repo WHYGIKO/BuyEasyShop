@@ -1,14 +1,15 @@
-import { Link } from "react-router-dom"
+"use client";
+
+import Link from "next/link";
 
 const ProductCard = ({ product }) => {
-  // Truncate description to 3 lines (approximately 100 characters)
   const truncateDescription = (text, maxLength = 100) => {
-    if (text.length <= maxLength) return text
-    return text.substring(0, maxLength) + "..."
-  }
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
+  };
 
   return (
-    <Link to={`/product/${product.id}`} className="product-card">
+    <Link href={`/product/${product.id}`} className="product-card">
       <div className="product-image-container">
         <img
           src={product.thumbnail || "/placeholder.svg"}
@@ -23,7 +24,7 @@ const ProductCard = ({ product }) => {
         <p className="product-description">{truncateDescription(product.description)}</p>
       </div>
     </Link>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

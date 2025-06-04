@@ -1,4 +1,3 @@
-// API service for fetching products from dummyjson.com
 
 export const fetchAllProducts = async () => {
   try {

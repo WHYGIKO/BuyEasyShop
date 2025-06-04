@@ -1,10 +1,9 @@
-import React from "react"
-import ReactDOM from "react-dom/client"
-import App from "./App"
+"use client";
 
-const root = ReactDOM.createRoot(document.getElementById("root"))
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+import dynamic from "next/dynamic";
+
+const AppWithRouter = dynamic(() => import("../src/App"), { ssr: false });
+
+export default function Page() {
+  return <AppWithRouter />;
+}

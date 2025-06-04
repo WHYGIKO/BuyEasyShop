@@ -1,95 +1,108 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { fetchAllProducts } from "../api/products"
-import NavBar from "../components/NavBar"
-import ProductCard from "../components/ProductCard"
-import Pagination from "../components/Pagination"
-import Loader from "../components/Loader"
+import { useState, useEffect } from "react";
+import { fetchAllProducts } from "../api/products";
+import NavBar from "../components/NavBar";
+import ProductCard from "../components/ProductCard";
+import Pagination from "../components/Pagination";
+import Loader from "../components/Loader";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Home = () => {
-  const [products, setProducts] = useState([])
-  const [filteredProducts, setFilteredProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "ascending" })
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const productsPerPage = 9
+  const queryPage = parseInt(searchParams.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState(queryPage);
 
-  // Fetch products on component mount
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "ascending" });
+
+  const productsPerPage = 9;
+
   useEffect(() => {
     const getProducts = async () => {
       try {
-        setLoading(true)
-        const data = await fetchAllProducts()
-        setProducts(data.products)
-        setFilteredProducts(data.products)
-        setLoading(false)
+        setLoading(true);
+        const data = await fetchAllProducts();
+        setProducts(data.products);
+        setFilteredProducts(data.products);
+        setLoading(false);
       } catch (err) {
-        setError("Failed to fetch products")
-        setLoading(false)
+        setError("Failed to fetch products");
+        setLoading(false);
       }
-    }
+    };
 
-    getProducts()
-  }, [])
+    getProducts();
+  }, []);
 
-  // Filter products based on search query
   useEffect(() => {
     if (searchQuery.trim() === "") {
-      setFilteredProducts(products)
+      setFilteredProducts(products);
     } else {
-      const filtered = products.filter((product) => product.title.toLowerCase().includes(searchQuery.toLowerCase()))
-      setFilteredProducts(filtered)
+      const filtered = products.filter((product) =>
+        product.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredProducts(filtered);
     }
-    setCurrentPage(1) // Reset to first page when filtering
-  }, [searchQuery, products])
+    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", 1);
+    router.push(`?${params.toString()}`);
+  }, [searchQuery, products]);
 
-  // Sort products
   const handleSort = (key) => {
-    let direction = "ascending"
+    let direction = "ascending";
 
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending"
+      direction = "descending";
     }
 
-    setSortConfig({ key, direction })
+    setSortConfig({ key, direction });
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
       if (a[key] < b[key]) {
-        return direction === "ascending" ? -1 : 1
+        return direction === "ascending" ? -1 : 1;
       }
       if (a[key] > b[key]) {
-        return direction === "ascending" ? 1 : -1
+        return direction === "ascending" ? 1 : -1;
       }
-      return 0
-    })
+      return 0;
+    });
 
-    setFilteredProducts(sortedProducts)
-  }
+    setFilteredProducts(sortedProducts);
+  };
 
-  // Get current products for pagination
-  const indexOfLastProduct = currentPage * productsPerPage
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber)
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", pageNumber);
+    router.push(`?${params.toString()}`);
+  };
 
-  // Render sort button with arrow indicator
   const renderSortButton = (label, key) => {
-    const isActive = sortConfig.key === key
-    const direction = isActive ? sortConfig.direction : null
+    const isActive = sortConfig.key === key;
+    const direction = isActive ? sortConfig.direction : null;
 
     return (
-      <button className={`sort-button ${isActive ? "active" : ""}`} onClick={() => handleSort(key)}>
+      <button
+        className={`sort-button ${isActive ? "active" : ""}`}
+        onClick={() => handleSort(key)}
+      >
         {label} {isActive && (direction === "ascending" ? "↑" : "↓")}
       </button>
-    )
-  }
+    );
+  };
 
   return (
     <div className="home-page">
@@ -125,12 +138,18 @@ const Home = () => {
               ))}
             </div>
 
-            {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={paginate} />}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={paginate}
+              />
+            )}
           </>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

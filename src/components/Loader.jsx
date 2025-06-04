@@ -1,5 +1,6 @@
+"use client";
+
 const Loader = () => {
-  // Create an array of 9 items for skeleton loading
   const skeletons = Array(9).fill(null)
 
   return (

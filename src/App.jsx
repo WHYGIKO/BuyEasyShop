@@ -1,11 +1,11 @@
 "use client";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import ProductDetail from "./pages/ProductDetail"
-import NotFound from "./pages/NotFound"
-import Footer from "./components/Footer"
-import "./styles.scss"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import ProductDetail from "./pages/ProductDetail";
+import NotFound from "./pages/NotFound";
+import Footer from "./components/Footer";
+import "./styles.scss";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
         <Footer />
       </div>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
