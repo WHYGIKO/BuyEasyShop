@@ -2,8 +2,26 @@
 
 import Link from "next/link";
 
-const ProductCard = ({ product }) => {
-  const truncateDescription = (text, maxLength = 100) => {
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage?: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+}
+
+interface ProductCardProps {
+  product: Product;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const truncateDescription = (text: string, maxLength = 100): string => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };

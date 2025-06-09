@@ -10,7 +10,7 @@ const Footer = () => {
     message: "",
   })
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target
     setContactForm({
       ...contactForm,
@@ -18,7 +18,7 @@ const Footer = () => {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault()
     // In a real app, you would send this data to a server
     console.log("Form submitted:", contactForm)

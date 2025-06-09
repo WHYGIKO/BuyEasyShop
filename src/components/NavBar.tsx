@@ -3,8 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const NavBar = ({ searchQuery, setSearchQuery }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+interface NavBarProps {
+  searchQuery: string;
+  setSearchQuery: (value: string) => void;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ searchQuery, setSearchQuery }) => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);

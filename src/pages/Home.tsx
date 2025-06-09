@@ -8,19 +8,39 @@ import Pagination from "../components/Pagination";
 import Loader from "../components/Loader";
 import { useRouter, useSearchParams } from "next/navigation";
 
+// Interface for product
+interface ShortProduct {
+  id: number;
+  title: string;
+  price: number;
+  rating: number;
+  thumbnail?: string;
+  description?: string;
+}
+
+type SortableKey = "title" | "price" | "rating";
+
+interface SortConfig {
+  key: SortableKey | null;
+  direction: "ascending" | "descending";
+}
+
 const Home = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState<ShortProduct[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<ShortProduct[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const searchParams = useSearchParams();
   const router = useRouter();
+  const queryPage = parseInt(searchParams?.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState<number>(queryPage);
 
-  const queryPage = parseInt(searchParams.get("page") || "1", 10);
-  const [currentPage, setCurrentPage] = useState(queryPage);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "ascending" });
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: null,
+    direction: "ascending",
+  });
 
   const productsPerPage = 9;
 
@@ -50,15 +70,17 @@ const Home = () => {
       );
       setFilteredProducts(filtered);
     }
+
     setCurrentPage(1);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", 1);
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("page", "1");
     router.push(`?${params.toString()}`);
   }, [searchQuery, products]);
 
-  const handleSort = (key) => {
-    let direction = "ascending";
+  const handleSort = (key: SortableKey | null) => {
+    if (!key) return;
 
+    let direction: "ascending" | "descending" = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
@@ -66,12 +88,11 @@ const Home = () => {
     setSortConfig({ key, direction });
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return direction === "ascending" ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return direction === "ascending" ? 1 : -1;
-      }
+      const aValue = a[key];
+      const bValue = b[key];
+
+      if (aValue < bValue) return direction === "ascending" ? -1 : 1;
+      if (aValue > bValue) return direction === "ascending" ? 1 : -1;
       return 0;
     });
 
@@ -83,14 +104,14 @@ const Home = () => {
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
-  const paginate = (pageNumber) => {
+  const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", pageNumber);
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("page", pageNumber.toString());
     router.push(`?${params.toString()}`);
   };
 
-  const renderSortButton = (label, key) => {
+  const renderSortButton = (label: string, key: SortableKey) => {
     const isActive = sortConfig.key === key;
     const direction = isActive ? sortConfig.direction : null;
 

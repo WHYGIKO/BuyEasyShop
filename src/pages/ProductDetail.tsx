@@ -6,16 +6,31 @@ import { fetchProductById } from "../api/products";
 import Loader from "../components/Loader";
 import Link from "next/link";
 
-const ProductDetail = () => {
+
+interface ProductDetail {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage?: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+}
+
+const ProductDetail: React.FC = () => {
   const router = useRouter();
-  const { id } = router.query; 
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { id } = router.query as { id?: string }; // id ni string deb aniq belgiladik
+  const [product, setProduct] = useState<ProductDetail | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   useEffect(() => {
-    if (!id) return; 
+    if (!id) return;
     const getProduct = async () => {
       try {
         setLoading(true);
@@ -31,7 +46,7 @@ const ProductDetail = () => {
     getProduct();
   }, [id]);
 
-  const nextImage = () => {
+  const nextImage = (): void => {
     if (product && product.images.length > 0) {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
@@ -39,7 +54,7 @@ const ProductDetail = () => {
     }
   };
 
-  const prevImage = () => {
+  const prevImage = (): void => {
     if (product && product.images.length > 0) {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
