@@ -9,11 +9,7 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ searchQuery, setSearchQuery }) => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   return (
     <nav className="navbar">
@@ -22,7 +18,7 @@ const NavBar: React.FC<NavBarProps> = ({ searchQuery, setSearchQuery }) => {
           BuyEasyShop
         </Link>
 
-        <div className="search-container desktop-search">
+        <div className="search ">
           <input
             type="text"
             placeholder="Search products..."
@@ -32,31 +28,16 @@ const NavBar: React.FC<NavBarProps> = ({ searchQuery, setSearchQuery }) => {
           />
         </div>
 
-        <div className="hamburger" onClick={toggleMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <div className={`menu-container ${menuOpen ? "open" : ""}`}>
-          <div className="mobile-menu">
-            <div className="search-container mobile-search">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-            </div>
-            <Link href="/about" className="menu-item" onClick={toggleMenu}>
+        <div className="hamburger" >
+        <Link href="#footer" className="menu-item">
               About
             </Link>
-            <Link href="/contact" className="menu-item" onClick={toggleMenu}>
+            <Link href="tel:+998334503084" className="menu-item">
               Contact
             </Link>
-          </div>
         </div>
+
+        
       </div>
     </nav>
   );

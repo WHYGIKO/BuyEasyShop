@@ -13,18 +13,15 @@ export const fetchAllProducts = async () => {
 }
 
 export const fetchProductById = async (id) => {
-  console.log("Kelayotgan ID:", id)
+  console.log("Kelayotgan ID:", id); 
   try {
-    const response = await fetch(`https://dummyjson.com/products/${id}`)
-    console.log("Response:", response)
+    const response = await fetch(`https://dummyjson.com/products/${id}`);
     if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.status}`)
+      throw new Error(`Network response was not ok: ${response.status}`);
     }
-    const data = await response.json()
-    console.log("Olingan ma'lumot:", data)
-    return data
+    const data = await response.json();
+    return data;
   } catch (error) {
-    console.error(`Xato product olishda (ID: ${id}):`, error)
-    throw error
+    throw error;
   }
-}
+};

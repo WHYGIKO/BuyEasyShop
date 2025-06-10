@@ -16,6 +16,10 @@ interface ShortProduct {
   rating: number;
   thumbnail?: string;
   description?: string;
+  stock?: number;
+  brand?: string;
+  category?: string;
+  images?: string[];
 }
 
 type SortableKey = "title" | "price" | "rating";
@@ -130,6 +134,7 @@ const Home = () => {
       <NavBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <div className="content-container">
+      
         <h1 className="page-title fade-in">PRODUCTS</h1>
 
         <div className="sort-container">

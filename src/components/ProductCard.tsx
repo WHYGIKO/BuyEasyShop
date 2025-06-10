@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 export interface Product {
-  id: string;
+  id: number;
   title: string;
   description: string;
   price: number;
@@ -17,7 +17,7 @@ export interface Product {
 }
 
 interface ProductCardProps {
-  product: Product;
+  product: Partial<Product>; // Все поля становятся необязательными
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="product-info">
         <h3 className="product-title">{product.title}</h3>
         <p className="product-price">${product.price}</p>
-        <p className="product-description">{truncateDescription(product.description)}</p>
+        <p className="product-description">{truncateDescription(product.description || "")}</p>
       </div>
     </Link>
   );

@@ -1,7 +1,9 @@
 import "../styles.scss";
 import Footer from "../components/Footer";
 
-function MyApp({ Component, pageProps }) {
+import type { AppProps } from "next/app";
+
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Component {...pageProps} />
